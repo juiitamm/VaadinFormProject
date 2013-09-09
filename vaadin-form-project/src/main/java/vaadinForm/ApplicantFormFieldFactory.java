@@ -34,8 +34,10 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
             OptionGroup genderSelect = new OptionGroup("Gender");
             genderSelect.addItem("Male");
             genderSelect.addItem("Female");
-            //genderSelect.setNullSelectionAllowed(false);
-            genderSelect.setNullSelectionItemId("Male");
+            
+            //Doesnt work: shows "Male" as selected but value is still null
+            //genderSelect.setNullSelectionItemId("Male");
+            
             return genderSelect;
         }
         else if("arguments".equals(pid)){

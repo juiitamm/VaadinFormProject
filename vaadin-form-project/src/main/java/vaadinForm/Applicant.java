@@ -11,6 +11,11 @@ public class Applicant {
     private String gender;
     private String arguments;
     
+    public Applicant(){
+        //Set default gender to fix problem with optiongroup default value.
+        this.gender = "Male";
+    }
+    
     public void setFirstName(String firstName){
         this.firstName = firstName;
     }
