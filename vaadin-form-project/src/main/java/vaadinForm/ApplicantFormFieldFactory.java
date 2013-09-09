@@ -25,10 +25,10 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
         String pid = propertyId.toString();
         
         if("firstName".equals(pid)){
-            return getRequiredTextField("First name");
+            return getRequiredTextField("First name", "First name is missing");
         }
         else if("lastName".equals(pid)){
-            return getRequiredTextField("Last name");                        
+            return getRequiredTextField("Last name", "Last name is missing");                        
         }
         else if("gender".equals(pid)){
             OptionGroup genderSelect = new OptionGroup("Gender");
@@ -53,10 +53,13 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
      * @param caption The caption for the text field.
      * @return Returns a TextField object.
      */
-    private TextField getRequiredTextField(String caption){
+    private TextField getRequiredTextField(String caption, String requiredErrorMessage){
         TextField field = new TextField(caption);
-        field.setRequired(true);
         field.setNullRepresentation("");
+        field.setRequiredError(requiredErrorMessage);
+        field.setRequired(true);
+//        field.setValidationVisible(true);
+        //field.setImmediate(true);
         return field;
     }
 }
