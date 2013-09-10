@@ -15,7 +15,10 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * The Application's "main" class
+ * Simple application that makes a web form. 
+ * User fills the form and submits it.
+ * The data is then stored to a database and shown in a results window.
+ * @author Juho Tammela
  */
 @SuppressWarnings("serial")
 public class MyVaadinApplication extends Application {
@@ -25,22 +28,31 @@ public class MyVaadinApplication extends Application {
     private Applicant applicant;
 
     @Override
+    /**
+     * Initializing the application, creating windows and selecting the main window.
+     */
     public void init() {
-        formWindow = new Window("Vaadin form application");
+        formWindow = createAndGetFormWindow();
         setMainWindow(formWindow);
 
-        resultsWindow = new Window("Vaadin form application");
-
-
+        resultsWindow = createAndGetResultsWindow();
+    }
+    
+    /**
+     * Creates and returns a window with a form.
+     * @return Returns a window with a form.
+     */
+    private Window createAndGetFormWindow(){
+        Window window = new Window("Vaadin form application");
         Label heading = new Label("Applicant information form");
         heading.setStyleName("h1");
-        formWindow.addComponent(heading);
+        window.addComponent(heading);
 
         Form form = new Form();
         form.setCaption("Applicant information");
         form.setDescription("Please fill in the required data.");
         //form.setImmediate(true);
-        formWindow.addComponent(form);
+        window.addComponent(form);
 
         applicant = new Applicant();
         BeanItem item = new BeanItem(applicant);
@@ -54,43 +66,67 @@ public class MyVaadinApplication extends Application {
         form.setItemDataSource(item);
         form.setFormFieldFactory(new ApplicantFormFieldFactory());
         form.setVisibleItemProperties(order);
-
+        
         Button button = new Button("Send", form, "commit");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 removeWindow(formWindow);
                 setMainWindow(resultsWindow);
-
-                saveApplicantInformation(applicant);
-
-                Label heading = new Label("Applicant information form");
-                heading.setStyleName("h1");
-                resultsWindow.addComponent(heading);
-
-
-                Label subHeading = new Label("The following data was sent successfully!");
-                subHeading.setStyleName("h2");
-                resultsWindow.addComponent(subHeading);
-
-                GridLayout grid = new GridLayout(2, 4);
-                resultsWindow.addComponent(grid);
-
-                grid.addComponent(new Label("First name: "));
-                grid.addComponent(new Label(applicant.getFirstName()));
-
-                grid.addComponent(new Label("Last name: "));
-                grid.addComponent(new Label(applicant.getLastName()));
-
-                grid.addComponent(new Label("Gender: "));
-                grid.addComponent(new Label(applicant.getGender()));
-
-                grid.addComponent(new Label("Arguments: "));
-                grid.addComponent(new Label(applicant.getArguments()));
+                
+                if(saveApplicantInformation(applicant) == true){
+                    showApplicantData(resultsWindow);
+                }
+                else {
+                    //TODO...
+                }
             }
+
+            
         });
         form.getLayout().addComponent(button);
 
+        
+        return window;
 
+    }
+    
+    /**
+     * Creates a view to show the submitted form data in a window.
+     * @param window The window where the data is shown.
+     */
+    private void showApplicantData(Window window) {
+        Label subHeading = new Label("The following data was sent successfully!");
+        subHeading.setStyleName("h2");
+        window.addComponent(subHeading);
+        
+        GridLayout grid = new GridLayout(2, 4);
+        window.addComponent(grid);
+
+        grid.addComponent(new Label("First name: "));
+        grid.addComponent(new Label(applicant.getFirstName()));
+
+        grid.addComponent(new Label("Last name: "));
+        grid.addComponent(new Label(applicant.getLastName()));
+
+        grid.addComponent(new Label("Gender: "));
+        grid.addComponent(new Label(applicant.getGender()));
+
+        grid.addComponent(new Label("Arguments: "));
+        grid.addComponent(new Label(applicant.getArguments()));
+    }
+    
+    /**
+     * Creates and returns a window to show results after submitting form.
+     * @return A window to show the results.
+     */
+    private Window createAndGetResultsWindow(){
+        Window window = new Window("Vaadin form application");
+        
+        Label heading = new Label("Applicant information form");
+        heading.setStyleName("h1");
+        window.addComponent(heading);
+
+        return window;
     }
 
     /**
