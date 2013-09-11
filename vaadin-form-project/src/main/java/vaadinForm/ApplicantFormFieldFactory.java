@@ -14,6 +14,9 @@ import com.vaadin.ui.TextField;
  */
 public class ApplicantFormFieldFactory implements FormFieldFactory {
     
+    private final int maxTextFieldLength = 50;
+    private final int maxTextAreaLength = 2500;
+    
     /**
      * Creates a field based on the item's property id.
      * @param item The item where the property belongs to.
@@ -43,7 +46,7 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
         else if("arguments".equals(pid)){
             TextArea argumentsArea = new TextArea("Why are you applying for this job?");
             argumentsArea.setNullRepresentation("");
-            argumentsArea.setMaxLength(2500);
+            argumentsArea.setMaxLength(maxTextAreaLength);
             return argumentsArea;
         }
 
@@ -61,7 +64,7 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
         field.setNullRepresentation("");
         field.setRequiredError(requiredErrorMessage);
         field.setRequired(true);
-        field.setMaxLength(50);
+        field.setMaxLength(maxTextFieldLength);
 //        field.setValidationVisible(true);
         //field.setImmediate(true);
         return field;
