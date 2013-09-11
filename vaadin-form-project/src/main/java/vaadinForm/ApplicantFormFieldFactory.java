@@ -43,6 +43,7 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
         else if("arguments".equals(pid)){
             TextArea argumentsArea = new TextArea("Why are you applying for this job?");
             argumentsArea.setNullRepresentation("");
+            argumentsArea.setMaxLength(2500);
             return argumentsArea;
         }
 
@@ -60,6 +61,7 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
         field.setNullRepresentation("");
         field.setRequiredError(requiredErrorMessage);
         field.setRequired(true);
+        field.setMaxLength(50);
 //        field.setValidationVisible(true);
         //field.setImmediate(true);
         return field;
