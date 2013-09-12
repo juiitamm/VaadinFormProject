@@ -1,12 +1,40 @@
-/* Import the reindeer theme. */
-/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
-@import "../reindeer/reindeer.scss";
+@import url(../runo/legacy-styles.css);
 
-/* This contains all of your theme. */
-/* If somebody wants to extend the theme she will include this mixin. */
-@mixin mytheme {
-  /* Include all the styles from the reindeer theme */
-  @include reindeer;
-
-  /* Insert your theme rules here */
+.v-generated-body{
+    background-color: khaki;
 }
+
+.v-app {
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    min-width: 550px;
+    border-radius: 50px;
+}
+
+.v-label-h1 {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    text-align: center; 
+}
+
+.v-label-h2 {
+    text-align: center; 
+    margin-bottom: 40px;
+}
+
+.v-formlayout-captioncell {
+    text-align: left;
+    white-space: normal;
+}
+
+.errorlabel {
+    text-align: center;
+    color: red;
+    border-style:solid;
+    border-color:red;
+    border-width:1px;
+    border-radius: 8px;
+}
+
+
