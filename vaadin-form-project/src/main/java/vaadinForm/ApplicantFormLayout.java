@@ -9,7 +9,9 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
@@ -38,6 +40,11 @@ public class ApplicantFormLayout extends VerticalLayout {
     
     public ApplicantFormLayout(String headingText){
         
+        //this.setMargin(new MarginInfo(false, true, false, true));
+        //formLayout.setWidth("50%");
+        this.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+        
+        
         Label heading = new Label(headingText);
         heading.setStyleName("h1");
         this.addComponent(heading);
@@ -49,7 +56,11 @@ public class ApplicantFormLayout extends VerticalLayout {
         fieldGroup.setItemDataSource(item);
         
         form = new FormLayout();
+        form.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+        form.setMargin(new MarginInfo(false, true, false, true));
+        form.setWidth("50%");
         this.addComponent(form);
+        this.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
         
         firstNameField = getBuildAndBindTextField("First name", "firstName", "First name is missing");
         //firstNameField = fieldGroup.buildAndBind("First name", "firstName", TextField.class);
@@ -90,6 +101,7 @@ public class ApplicantFormLayout extends VerticalLayout {
         
         errorField = new Label();
         errorField.setVisible(false);
+        errorField.addStyleName("errorlabel");
         form.addComponent(errorField);
     }
     
