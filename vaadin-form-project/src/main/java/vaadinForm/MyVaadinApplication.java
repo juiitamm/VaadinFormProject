@@ -6,6 +6,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import java.sql.Connection;
@@ -20,7 +21,7 @@ import javax.servlet.annotation.WebServlet;
  * The data is then stored to a database and shown in a results window.
  * @author Juho Tammela
  */
-@Theme("runo")
+@Theme("mytheme")
 @SuppressWarnings("serial")
 public class MyVaadinApplication extends UI {
 
@@ -76,6 +77,7 @@ public class MyVaadinApplication extends UI {
         Label subHeading = new Label("The following data was sent successfully!");
         subHeading.setStyleName("h2");
         layout.addComponent(subHeading);
+        layout.setComponentAlignment(subHeading, Alignment.TOP_CENTER);
         
         GridLayout grid = new GridLayout(2, 4);
         layout.addComponent(grid);
@@ -100,7 +102,7 @@ public class MyVaadinApplication extends UI {
      */
     private VerticalLayout createAndGetResultsLayout(){
         VerticalLayout layout = new VerticalLayout();
-        
+        layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         Label heading = new Label("Applicant information form");
         heading.setStyleName("h1");
         layout.addComponent(heading);
