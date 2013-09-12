@@ -1,9 +1,9 @@
 package vaadinForm;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.fieldgroup.FieldGroupFieldFactory;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -12,7 +12,7 @@ import com.vaadin.ui.TextField;
  * Field factory class for generating proper fields to the form.
  * @author Juho
  */
-public class ApplicantFormFieldFactory implements FormFieldFactory {
+public class ApplicantFormFieldFactory implements FieldGroupFieldFactory {
     
     private final int maxTextFieldLength = 50;
     private final int maxTextAreaLength = 2500;
@@ -37,7 +37,6 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
             OptionGroup genderSelect = new OptionGroup("Gender");
             genderSelect.addItem("Male");
             genderSelect.addItem("Female");
-            
             //Doesnt work: shows "Male" as selected but value is still null
             //genderSelect.setNullSelectionItemId("Male");
             
@@ -68,5 +67,10 @@ public class ApplicantFormFieldFactory implements FormFieldFactory {
 //        field.setValidationVisible(true);
         //field.setImmediate(true);
         return field;
+    }
+
+    @Override
+    public <T extends Field> T createField(Class<?> dataType, Class<T> fieldType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

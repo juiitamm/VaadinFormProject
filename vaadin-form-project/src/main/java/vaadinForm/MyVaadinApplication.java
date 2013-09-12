@@ -1,18 +1,22 @@
 package vaadinForm;
 
-import com.vaadin.Application;
+import com.google.gwt.i18n.server.testing.Gender;
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.Button;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.annotation.WebServlet;
 
 /**
  * Simple application that makes a web form. 
@@ -20,87 +24,117 @@ import java.util.Vector;
  * The data is then stored to a database and shown in a results window.
  * @author Juho Tammela
  */
+@Theme("runo")
 @SuppressWarnings("serial")
-public class MyVaadinApplication extends Application {
+public class MyVaadinApplication extends UI {
 
-    private Window formWindow;
-    private Window resultsWindow;
+    @WebServlet(value = "/*", asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = false, ui = MyVaadinApplication.class, widgetset = "vaadinForm.AppWidgetSet")
+    public static class Servlet extends VaadinServlet {
+    }
+    
+    private VerticalLayout formLayout;
+    private VerticalLayout resultsLayout;
+    private BeanFieldGroup fg;
+    
+    private final int maxTextFieldLength = 50;
+    private final int maxTextAreaLength = 2500;
+    
     private Applicant applicant;
 
     @Override
     /**
-     * Initializing the application, creating windows and selecting the main window.
+     * Initializing the application, creating layouts and selecting the layout
+     * to show.
      */
-    public void init() {
-        formWindow = createAndGetFormWindow();
-        setMainWindow(formWindow);
-
-        resultsWindow = createAndGetResultsWindow();
+    public void init(VaadinRequest request) {
+        
+        formLayout = createAndGetFormLayout();
+        setContent(formLayout);
+        resultsLayout = createAndGetResultsLayout();
     }
+    
     
     /**
      * Creates and returns a window with a form.
      * @return Returns a window with a form.
      */
-    private Window createAndGetFormWindow(){
-        Window window = new Window("Vaadin form application");
+    private VerticalLayout createAndGetFormLayout(){
+        
+        VerticalLayout layout = new VerticalLayout();
+        
         Label heading = new Label("Applicant information form");
         heading.setStyleName("h1");
-        window.addComponent(heading);
-
-        Form form = new Form();
-        form.setCaption("Applicant information");
-        form.setDescription("Please fill in the required data.");
-        //form.setImmediate(true);
-        window.addComponent(form);
+        layout.addComponent(heading);
 
         applicant = new Applicant();
         BeanItem item = new BeanItem(applicant);
-
-        Vector order = new Vector();
-        order.add("firstName");
-        order.add("lastName");
-        order.add("gender");
-        order.add("arguments");
-
-        form.setItemDataSource(item);
-        form.setFormFieldFactory(new ApplicantFormFieldFactory());
-        form.setVisibleItemProperties(order);
         
-        Button button = new Button("Send", form, "commit");
-        button.addListener(new Button.ClickListener() {
+        fg = new BeanFieldGroup<Applicant>(Applicant.class);
+        fg.setItemDataSource(item);
+        
+        TextField firstNameField = fg.buildAndBind("First name", "firstName", TextField.class);
+        firstNameField.setNullRepresentation("");
+        firstNameField.setRequiredError("First name is missing");
+        firstNameField.setRequired(true);
+        firstNameField.setMaxLength(maxTextFieldLength);
+        
+        TextField lastNameField = fg.buildAndBind("Last name", "lastName", TextField.class);
+        lastNameField.setNullRepresentation("");
+        lastNameField.setRequiredError("Last name is missing");
+        lastNameField.setRequired(true);
+        lastNameField.setMaxLength(maxTextFieldLength);
+        
+        OptionGroup genderOption = fg.buildAndBind("Gender", "gender", OptionGroup.class);
+        genderOption.removeItem(Gender.UNKNOWN);
+        
+        TextArea argumentsArea = fg.buildAndBind("Why are you applying for this job?", "arguments", TextArea.class);
+        argumentsArea.setNullRepresentation("");
+        argumentsArea.setMaxLength(maxTextAreaLength);
+        
+        layout.addComponent(firstNameField);
+        layout.addComponent(lastNameField);
+        layout.addComponent(genderOption);
+        layout.addComponent(argumentsArea);
+        
+        Button button = new Button("Send");
+        button.addClickListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                removeWindow(formWindow);
-                setMainWindow(resultsWindow);
+                try {
+                    fg.commit();
+                    
+                    if(saveApplicantInformation(applicant) == true){
+                        showApplicantData(resultsLayout);
+                        setContent(resultsLayout);
+                    }
+                    else {
+                        //TODO... what happens?
+                    }
+                } catch (FieldGroup.CommitException ex) {
+                    //TODO: handle showing error message
+                    Logger.getLogger(MyVaadinApplication.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
-                if(saveApplicantInformation(applicant) == true){
-                    showApplicantData(resultsWindow);
-                }
-                else {
-                    //TODO...
-                }
+               
+               
             }
-
-            
         });
-        form.getLayout().addComponent(button);
-
-        
-        return window;
-
+        layout.addComponent(button);
+        return layout;
     }
+    
     
     /**
      * Creates a view to show the submitted form data in a window.
-     * @param window The window where the data is shown.
+     * @param layout The window where the data is shown.
      */
-    private void showApplicantData(Window window) {
+    private void showApplicantData(VerticalLayout layout) {
         Label subHeading = new Label("The following data was sent successfully!");
         subHeading.setStyleName("h2");
-        window.addComponent(subHeading);
+        layout.addComponent(subHeading);
         
         GridLayout grid = new GridLayout(2, 4);
-        window.addComponent(grid);
+        layout.addComponent(grid);
 
         grid.addComponent(new Label("First name: "));
         grid.addComponent(new Label(applicant.getFirstName()));
@@ -109,24 +143,25 @@ public class MyVaadinApplication extends Application {
         grid.addComponent(new Label(applicant.getLastName()));
 
         grid.addComponent(new Label("Gender: "));
-        grid.addComponent(new Label(applicant.getGender()));
+        grid.addComponent(new Label(applicant.getGender().toString()));
 
         grid.addComponent(new Label("Arguments: "));
         grid.addComponent(new Label(applicant.getArguments()));
     }
     
+    
     /**
-     * Creates and returns a window to show results after submitting form.
-     * @return A window to show the results.
+     * Creates and returns a layout to show results after submitting form.
+     * @return A layout to show the results.
      */
-    private Window createAndGetResultsWindow(){
-        Window window = new Window("Vaadin form application");
+    private VerticalLayout createAndGetResultsLayout(){
+        VerticalLayout layout = new VerticalLayout();
         
         Label heading = new Label("Applicant information form");
         heading.setStyleName("h1");
-        window.addComponent(heading);
+        layout.addComponent(heading);
 
-        return window;
+        return layout;
     }
 
     /**
@@ -152,7 +187,7 @@ public class MyVaadinApplication extends Application {
             
             ps.setString(1, applicant.getFirstName());
             ps.setString(2, applicant.getLastName());
-            ps.setString(3, applicant.getGender());
+            ps.setString(3, applicant.getGender().toString());
             ps.setString(4, applicant.getArguments());
             
             ps.executeUpdate();

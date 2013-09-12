@@ -1,19 +1,24 @@
 package vaadinForm;
 
+import com.google.gwt.i18n.server.testing.Gender;
+import java.io.Serializable;
+
 /**
  * JavaBean class for the applicant.
  * @author Juho
  */
-public class Applicant {
+public class Applicant implements Serializable{
     
     private String firstName;
     private String lastName;
-    private String gender;
+    //private String gender;
     private String arguments;
+    
+    private Gender gender;
     
     public Applicant(){
         //Set default gender to fix problem with optiongroup default value.
-        this.gender = "Male";
+        this.gender = Gender.MALE;
     }
     
     public void setFirstName(String firstName){
@@ -32,11 +37,11 @@ public class Applicant {
         return this.lastName;
     }
     
-    public void setGender(String gender){
+    public void setGender(Gender gender){
         this.gender = gender;
     }
     
-    public String getGender(){
+    public Gender getGender(){
         return this.gender;
     }
     
