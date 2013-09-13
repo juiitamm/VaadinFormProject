@@ -58,11 +58,11 @@ public class ApplicantFormLayout extends VerticalLayout {
         fieldGroup.setItemDataSource(item);
         
         form = new FormLayout();
+        this.addComponent(form);
+        this.setComponentAlignment(form, Alignment.TOP_CENTER);
         form.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         form.setMargin(new MarginInfo(false, true, false, true));
         form.setWidth("50%");
-        this.addComponent(form);
-        this.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
         
         firstNameField = getBuildAndBindTextField(fieldGroup, "First name", 
                 "firstName", "First name is missing", maxTextFieldLength);     
