@@ -59,10 +59,14 @@ public class ApplicantFormLayout extends VerticalLayout {
         
         form = new FormLayout();
         this.addComponent(form);
+//        this.setExpandRatio(form, 2);
         this.setComponentAlignment(form, Alignment.TOP_CENTER);
         form.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-        form.setMargin(new MarginInfo(false, true, false, true));
-        form.setWidth("50%");
+        form.setMargin(new MarginInfo(false, true, true, true));
+        //form.setWidth("50%");
+        form.setWidth("550px");
+//        form.setSizeFull();
+//        form.setHeight("100%");
         
         firstNameField = getBuildAndBindTextField(fieldGroup, "First name", 
                 "firstName", "First name is missing", maxTextFieldLength);     
@@ -79,6 +83,8 @@ public class ApplicantFormLayout extends VerticalLayout {
         TextArea argumentsArea = fieldGroup.buildAndBind("Why are you applying for this job?", "arguments", TextArea.class);
         argumentsArea.setNullRepresentation("");
         argumentsArea.setMaxLength(maxTextAreaLength);
+        argumentsArea.setWidth("300px");
+        argumentsArea.setHeight("300px");
         
         form.addComponent(firstNameField);
         form.addComponent(lastNameField);

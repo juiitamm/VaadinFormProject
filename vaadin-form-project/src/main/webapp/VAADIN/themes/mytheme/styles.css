@@ -37,6 +37,10 @@
 	border-radius: 8px;
 }
 
+.gridlayoutmargin {
+	margin-bottom: 50px;
+}
+
 .footerlabel {
 	text-align: center;
 	color: gray;
