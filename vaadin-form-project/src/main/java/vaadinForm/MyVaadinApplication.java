@@ -3,7 +3,9 @@ package vaadinForm;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -45,7 +47,8 @@ public class MyVaadinApplication extends UI {
         p.setTitle("Vaadin form application");
         
         formLayout = new ApplicantFormLayout("Applicant information form");
-        setContent(formLayout);
+        buildAndShowContent(formLayout);
+        
         resultsLayout = createAndGetResultsLayout();
 
         formLayout.getSendButton().addClickListener(new Button.ClickListener() {
@@ -56,14 +59,14 @@ public class MyVaadinApplication extends UI {
                     
                     if(saveApplicantInformation(formLayout.getApplicant()) == true){
                         showApplicantData(resultsLayout, formLayout.getApplicant());
-                        setContent(resultsLayout);
+                        buildAndShowContent(resultsLayout);
                     }
                     else {
                         Label subHeading = new Label("There was a problem sending the data!");
                         subHeading.setStyleName("h2");
                         resultsLayout.addComponent(subHeading);
                         resultsLayout.addComponent(new Label("Please try again or contact the webmaster."));
-                        setContent(resultsLayout);
+                        buildAndShowContent(resultsLayout);
                     }
                 } catch (FieldGroup.CommitException ex) {
                     event.getButton().setComponentError(new UserError(ex.getCause().getMessage()));
@@ -71,6 +74,36 @@ public class MyVaadinApplication extends UI {
                 }
             }
         });
+    }
+    
+    /**
+     * Method to take care of setting the page content. Adds a footer to the
+     * bottom of the page.
+     * @param content The VerticalLayout that holds the content to be rendered.
+     */
+    private void buildAndShowContent(VerticalLayout content){
+        setContent(content);
+        content.setHeight("100%");
+        
+        VerticalLayout footer = new VerticalLayout();
+        content.addComponent(footer);
+        content.setExpandRatio(footer, 2);
+        content.setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
+        
+        Label author = new Label("Juho Tammela");
+        author.addStyleName("footerlabel");
+        footer.addComponent(author);
+
+        Label email = new Label("juho.i.tammela@student.jyu.fi");
+        email.addStyleName("footerlabel");
+        footer.addComponent(email);
+        
+        ThemeResource vaadinIcon = new ThemeResource("img/vaadin-logo2.png");
+        Link vaadinLink = new Link(null, new ExternalResource("http://vaadin.com/"));
+        vaadinLink.setIcon(vaadinIcon);
+        footer.addComponent(vaadinLink);
+        footer.setComponentAlignment(vaadinLink, Alignment.BOTTOM_CENTER);
+        
     }
     
     /**
@@ -98,7 +131,6 @@ public class MyVaadinApplication extends UI {
         grid.addComponent(new Label("Arguments: "));
         grid.addComponent(new Label(applicant.getArguments()));
     }
-    
     
     /**
      * Creates and returns a layout to show results after submitting form.
