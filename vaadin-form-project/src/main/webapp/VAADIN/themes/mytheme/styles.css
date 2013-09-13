@@ -37,6 +37,15 @@
 	border-radius: 8px;
 }
 
+.footerlabel {
+	text-align: center;
+	color: gray;
+}
+
+.v-icon {
+	height: 20px;
+}
+
 .mytheme {
 	name: mytheme args: []
 }
