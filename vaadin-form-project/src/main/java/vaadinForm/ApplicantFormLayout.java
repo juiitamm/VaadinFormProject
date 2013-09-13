@@ -21,7 +21,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- *
+ * Layout containing a form for applicant data. Including a heading and an
+ * error field.
  * @author Juho
  */
 public class ApplicantFormLayout extends VerticalLayout {
@@ -38,12 +39,13 @@ public class ApplicantFormLayout extends VerticalLayout {
     private final int maxTextFieldLength = 50;
     private final int maxTextAreaLength = 2500;
     
+    /**
+     * Creates a new ApplicantFormLayout.
+     * @param headingText Text for a heading 1 element.
+     */
     public ApplicantFormLayout(String headingText){
         
-        //this.setMargin(new MarginInfo(false, true, false, true));
-        //formLayout.setWidth("50%");
         this.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-        
         
         Label heading = new Label(headingText);
         heading.setStyleName("h1");
@@ -62,24 +64,11 @@ public class ApplicantFormLayout extends VerticalLayout {
         this.addComponent(form);
         this.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
         
-        firstNameField = getBuildAndBindTextField("First name", "firstName", "First name is missing");
-        //firstNameField = fieldGroup.buildAndBind("First name", "firstName", TextField.class);
-        //firstNameField.setNullRepresentation("");
-        //firstNameField.setRequiredError("First name is missing");
-        //firstNameField.setRequired(true);
-        //firstNameField.setMaxLength(maxTextFieldLength);
-        //firstNameField.setValidationVisible(false);
-        //firstNameField.addValidator(new BeanValidator(Applicant.class, "firstName"));
-        //firstNameField.setComponentError(new UserError("FIRST NAME ERROR"));
+        firstNameField = getBuildAndBindTextField(fieldGroup, "First name", 
+                "firstName", "First name is missing", maxTextFieldLength);     
         
-        
-        lastNameField = getBuildAndBindTextField("Last name", "lastName", "Last name is missing");
-        //lastNameField = fieldGroup.buildAndBind("Last name", "lastName", TextField.class);
-        //lastNameField.setNullRepresentation("");
-        //lastNameField.setRequiredError("Last name is missing");
-        //lastNameField.setRequired(true);
-        //lastNameField.setMaxLength(maxTextFieldLength);
-        //lastNameField.setValidationVisible(false);
+        lastNameField = getBuildAndBindTextField(fieldGroup, "Last name", 
+                "lastName", "Last name is missing", maxTextFieldLength);
         
         OptionGroup genderOption = fieldGroup.buildAndBind("Gender", "gender", OptionGroup.class);
         genderOption.removeItem(Gender.UNKNOWN);
@@ -105,12 +94,22 @@ public class ApplicantFormLayout extends VerticalLayout {
         form.addComponent(errorField);
     }
     
-    private TextField getBuildAndBindTextField(String caption, String propertyId, String requiredErrorMessage){
-        TextField field = fieldGroup.buildAndBind(caption, propertyId, TextField.class);
+    /**
+     * Function to create required text fields binding them to BeanFieldGroup.
+     * @param fg BeanFieldGroup where data is bind.
+     * @param caption The caption for the field.
+     * @param propertyId The id of the property to bind to the field.
+     * @param requiredErrorMessage Error message to the required field.
+     * @param maxLength Maximum text length of the field.
+     * @return Returns the created text field.
+     */
+    private static TextField getBuildAndBindTextField(BeanFieldGroup fg, 
+            String caption, String propertyId, String requiredErrorMessage, int maxLength){
+        TextField field = fg.buildAndBind(caption, propertyId, TextField.class);
         field.setNullRepresentation("");
         field.setRequiredError(requiredErrorMessage);
         field.setRequired(true);
-        field.setMaxLength(maxTextFieldLength);
+        field.setMaxLength(maxLength);
         field.setValidationVisible(false);
         return field;
     }
@@ -127,6 +126,10 @@ public class ApplicantFormLayout extends VerticalLayout {
         fieldGroup.commit();
     }
     
+    /**
+     * Sets an error to the layout.
+     * @param error The error message.
+     */
     public void setError(String error){
         errorField.setValue(error);
         errorField.setVisible(true);
@@ -137,15 +140,11 @@ public class ApplicantFormLayout extends VerticalLayout {
         if(lastNameField.getValue() == null){
             lastNameField.setComponentError(new UserError(lastNameField.getRequiredError()));
         }
-        
-        /*
-        for (int i = 0; i < this.getComponentCount(); i++) {
-            Component c = this.getComponent(i);
-            if(c.)
-        }
-        */ 
     }
     
+    /**
+     * Clears errors from the layout.
+     */
     public void clearErrors(){
         errorField.setValue(null);
         errorField.setVisible(false);

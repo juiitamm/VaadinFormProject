@@ -3,10 +3,11 @@ package vaadinForm;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.server.Page;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import java.sql.Connection;
@@ -26,7 +27,8 @@ import javax.servlet.annotation.WebServlet;
 public class MyVaadinApplication extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = false, ui = MyVaadinApplication.class, widgetset = "vaadinForm.AppWidgetSet")
+    @VaadinServletConfiguration(productionMode = false, 
+            ui = MyVaadinApplication.class, widgetset = "vaadinForm.AppWidgetSet")
     public static class Servlet extends VaadinServlet {
     }
     
@@ -39,6 +41,8 @@ public class MyVaadinApplication extends UI {
      * to show.
      */
     public void init(VaadinRequest request) {
+        Page p = new Page(this, new PageState());
+        p.setTitle("Vaadin form application");
         
         formLayout = new ApplicantFormLayout("Applicant information form");
         setContent(formLayout);
@@ -71,7 +75,7 @@ public class MyVaadinApplication extends UI {
     
     /**
      * Creates a view to show the submitted form data in a window.
-     * @param layout The window where the data is shown.
+     * @param layout The layout where the data is shown.
      */
     private void showApplicantData(VerticalLayout layout, Applicant applicant) {
         Label subHeading = new Label("The following data was sent successfully!");
@@ -128,7 +132,8 @@ public class MyVaadinApplication extends UI {
                     "jdbc:postgresql://localhost:5432/ApplicantsDB", "postgres",
                     "admin");
 
-            String sql = "INSERT INTO applicants(firstname, lastname, gender, arguments) VALUES(?, ?, ?, ?)";
+            String sql = "INSERT INTO applicants(firstname, lastname, gender, "
+                    + "arguments) VALUES(?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             
             ps.setString(1, applicant.getFirstName());
@@ -144,7 +149,7 @@ public class MyVaadinApplication extends UI {
         } catch (SQLException e) {
 
             System.out.println("Connection Failed!");
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
 
         } finally {
