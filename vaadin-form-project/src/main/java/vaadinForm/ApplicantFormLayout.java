@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package vaadinForm;
 
 import com.google.gwt.i18n.server.testing.Gender;
@@ -44,7 +40,7 @@ public class ApplicantFormLayout extends VerticalLayout {
      * @param headingText Text for a heading 1 element.
      */
     public ApplicantFormLayout(String headingText){
-        
+        this.setHeight("100%");
         this.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         
         Label heading = new Label(headingText);
@@ -59,14 +55,10 @@ public class ApplicantFormLayout extends VerticalLayout {
         
         form = new FormLayout();
         this.addComponent(form);
-//        this.setExpandRatio(form, 2);
         this.setComponentAlignment(form, Alignment.TOP_CENTER);
         form.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         form.setMargin(new MarginInfo(false, true, true, true));
-        //form.setWidth("50%");
         form.setWidth("550px");
-//        form.setSizeFull();
-//        form.setHeight("100%");
         
         firstNameField = getBuildAndBindTextField(fieldGroup, "First name", 
                 "firstName", "First name is missing", maxTextFieldLength);     

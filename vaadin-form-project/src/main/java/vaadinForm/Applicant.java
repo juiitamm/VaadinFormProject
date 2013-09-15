@@ -11,11 +11,12 @@ public class Applicant implements Serializable{
     
     private String firstName;
     private String lastName;
-    //private String gender;
     private String arguments;
-    
     private Gender gender;
     
+    /**
+     * Sets up a new Applicant with the default gender of a male.
+     */
     public Applicant(){
         //Set default gender to fix problem with optiongroup default value.
         this.gender = Gender.MALE;

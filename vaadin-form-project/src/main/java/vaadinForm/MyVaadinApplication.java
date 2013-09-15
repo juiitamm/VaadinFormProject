@@ -35,7 +35,7 @@ public class MyVaadinApplication extends UI {
     }
     
     private ApplicantFormLayout formLayout;
-    private VerticalLayout resultsLayout;
+    private ApplicantResultsLayout resultsLayout;
 
     @Override
     /**
@@ -49,7 +49,7 @@ public class MyVaadinApplication extends UI {
         formLayout = new ApplicantFormLayout("Applicant information form");
         buildAndShowContent(formLayout);
         
-        resultsLayout = createAndGetResultsLayout();
+        resultsLayout = new ApplicantResultsLayout("Applicant information form");
 
         formLayout.getSendButton().addClickListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
@@ -58,7 +58,8 @@ public class MyVaadinApplication extends UI {
                     formLayout.commit();
                     
                     if(saveApplicantInformation(formLayout.getApplicant()) == true){
-                        showApplicantData(resultsLayout, formLayout.getApplicant());
+                        resultsLayout.addApplicantData(formLayout.getApplicant(),
+                                "The following data was sent successfully!"); 
                         buildAndShowContent(resultsLayout);
                     }
                     else {
@@ -83,14 +84,20 @@ public class MyVaadinApplication extends UI {
      */
     private void buildAndShowContent(VerticalLayout content){
         setContent(content);
-        content.setHeight("100%");
-        
+        addFooter(content);
+    }
+    
+    /**
+     * Adds a footer to the given layout.
+     * @param content The VerticalLayout where the footer is inserted.
+     */
+    private void addFooter(VerticalLayout content){
         VerticalLayout footer = new VerticalLayout();
+        footer.addStyleName("footer-margin-top");
         
         content.addComponent(footer);
         content.setExpandRatio(footer, 2);
         content.setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
-        
         
         Label author = new Label("Juho Tammela");
         author.addStyleName("footerlabel");
@@ -105,68 +112,8 @@ public class MyVaadinApplication extends UI {
         vaadinLink.setIcon(vaadinIcon);
         footer.addComponent(vaadinLink);
         footer.setComponentAlignment(vaadinLink, Alignment.BOTTOM_CENTER);
-        
-
-        
     }
     
-    /**
-     * Creates a view to show the submitted form data in a window.
-     * @param layout The layout where the data is shown.
-     */
-    private void showApplicantData(VerticalLayout layout, Applicant applicant) {
-        Label subHeading = new Label("The following data was sent successfully!");
-        subHeading.setStyleName("h2");
-        layout.addComponent(subHeading);
-        layout.setComponentAlignment(subHeading, Alignment.TOP_CENTER);
-        
-        GridLayout grid = new GridLayout(2, 4);
-        layout.addComponent(grid);
-        grid.setWidth("450px");
-        grid.setStyleName("gridlayoutmargin");
-        
-        grid.setRowExpandRatio(3, 5);
-        grid.setColumnExpandRatio(0, 1);
-        grid.setColumnExpandRatio(1, 5);
-
-        grid.addComponent(new Label("First name: "));
-        grid.addComponent(new Label(applicant.getFirstName()));
-
-        grid.addComponent(new Label("Last name: "));
-        grid.addComponent(new Label(applicant.getLastName()));
-
-        grid.addComponent(new Label("Gender: "));
-        grid.addComponent(new Label(applicant.getGender().toString()));
-
-        grid.addComponent(new Label("Arguments: "));
-        Label argumentsLabel = new Label(applicant.getArguments());
-        
-        //for testing layout:
-//        Label argumentsLabel = new Label("Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you, I wanna help you. But I can't give you this case, it don't belong to me. Besides, I've already been through too much shit this morning over this case to hand it over to your dumb ass.\n" +
-//"\n" +
-//"The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.\n" +
-//"\n" +
-//"The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.\n" +
-//"\n" +
-//"Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. ");
-        
-        grid.addComponent(argumentsLabel);
-    }
-    
-    /**
-     * Creates and returns a layout to show results after submitting form.
-     * @return A layout to show the results.
-     */
-    private VerticalLayout createAndGetResultsLayout(){
-        VerticalLayout layout = new VerticalLayout();
-        layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-        Label heading = new Label("Applicant information form");
-        heading.setStyleName("h1");
-        layout.addComponent(heading);
-
-        return layout;
-    }
-
     /**
      * Inserts the form data to a database.
      * @param applicant The applicant whose information will be stored.
