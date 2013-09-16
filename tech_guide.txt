@@ -1,0 +1,41 @@
+Technical guide
+
+This is an technical documentation for the Vaadin form project.
+
+Vaadin framework was the chosen framework for this project because of
+author's interest in this technology and it's well suited for creating
+a web UI. In this case the user interface was a form for a job applicant.
+
+The form has four fealds for first name, last name, gender and a larger text area
+for the reasons to apply for a job. When user has filled the information and tries
+to send them, the application verifies that the name fields are not empty. If they
+are empty, an error message is given. Also, the user cannot send too much text, as
+the maximum number of characters are defined for each text field.
+
+When the form is sent, the application saves the information to a JavaBean object. Each property of the object is bind to a form field.
+
+The data is then stored in a PostgreSQL database. If storing the data was successful,
+a resulst page is rendered for the user, where the entered information is displayed
+once again. In case something goes wrong with the database, an error message is 
+displayed.
+
+For building this project, Apache Maven 3.1.0 was used.
+
+Java versions:
+Java 1.7
+JavaEE 5
+
+Vaadin 7.15 was the chosen version for this project. Actually, the project
+was started using Vaadin 6.8.3 but later the author made the decicion to
+upgrade to Vaadin 7.1.5. The reason for the upgrade was to experiment also with
+Vaadin 7 that is not backwards compatible with previous Vaadin versions. A working
+prototype of this project using Vaadin 6.8.3 can be found in Git commit 6112be2a95.
+
+For the database, PostgreSQL 9.3 was chosen. The decicion to use an external
+database was made by the author who wanted to experiment setting up an 
+PostgreSQL-database and using it.
+
+NetBeans 7.3.1 was used as an IDE for this project.
+
+The application was developed and tested on Apache Tomcat 7.0.34.0 server and
+Google Chrome 29.0.1547.66 m web browser.
