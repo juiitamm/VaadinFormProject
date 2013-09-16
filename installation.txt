@@ -1,0 +1,28 @@
+Installation guide
+
+This is an installation guide for the Vaadin form project.
+
+1. Set up a new PostgreSQL, and create a table using the following SQL-statement:
+
+DROP TABLE IF EXISTS applicants;
+
+CREATE TABLE IF NOT EXISTS applicants (
+    id serial PRIMARY KEY, 
+    firstname VARCHAR(50),
+    lastname VARCHAR(50),
+    gender VARCHAR(10),
+    arguments VARCHAR(2500)
+);
+
+2. Edit MyVaadinApplication.java rows 131-133 to match your database address,
+   your database user name and password.
+   
+   For example, database named ApplicantDB, username postgres and password "admin":
+   
+   connection = DriverManager.getConnection(
+		"jdbc:postgresql://localhost:5432/ApplicantsDB", "postgres",
+		"admin");
+		
+3. Build project using Apache Maven.
+
+4. Copy the contents of target-folder to your server.
