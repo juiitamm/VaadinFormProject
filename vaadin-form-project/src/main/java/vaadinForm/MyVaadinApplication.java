@@ -126,7 +126,7 @@ public class MyVaadinApplication extends UI {
 
         try {
 
-            System.out.println("Attempting connection!");
+            //System.out.println("Attempting connection!");
             
             connection = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/ApplicantsDB", "postgres",
@@ -143,12 +143,12 @@ public class MyVaadinApplication extends UI {
             
             ps.executeUpdate();
             
-            System.out.println("DATA INSERTED");
+            //System.out.println("DATA INSERTED");
             
             
         } catch (SQLException e) {
 
-            System.out.println("Connection Failed!");
+            //System.out.println("Connection Failed!");
             //e.printStackTrace();
             return false;
 
@@ -162,8 +162,9 @@ public class MyVaadinApplication extends UI {
                 }
 
             } catch (SQLException ex) {
-                System.out.println("Closing Failed!");
-                return false;
+                //Ignored...
+                //System.out.println("Closing Failed!");
+                //return false;
             }
         }
         return true;
